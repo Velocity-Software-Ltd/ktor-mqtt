@@ -6,6 +6,8 @@ plugins {
     id("maven-publish")
 }
 
+val includeWebTargets = System.getenv("JITPACK").isNullOrBlank()
+
 kotlin {
     explicitApi()
 
@@ -14,13 +16,17 @@ kotlin {
             jvmTarget.set(JvmTarget.JVM_1_8)
         }
     }
-    wasmJs {
-        browser() // Target the browser environment
+    if (includeWebTargets) {
+        wasmJs {
+            browser() // Target the browser environment
+        }
     }
 
-    js {
-        browser {}
-        nodejs {}
+    if (includeWebTargets) {
+        js {
+            browser {}
+            nodejs {}
+        }
     }
     jvm()
     iosArm64()

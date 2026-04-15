@@ -7,6 +7,8 @@ plugins {
     id("maven-publish")
 }
 
+val includeWebTargets = System.getenv("JITPACK").isNullOrBlank()
+
 kotlin {
     explicitApi()
 
@@ -15,22 +17,26 @@ kotlin {
             jvmTarget.set(JvmTarget.JVM_1_8)
         }
     }
-    wasmJs {
-        binaries.executable()
-        browser() {
-            commonWebpackConfig {
-                devServer = (devServer ?: KotlinWebpackConfig.DevServer()).apply {
-                    static = (static ?: mutableListOf()).apply {
-                        add(project.rootDir.path)
+    if (includeWebTargets) {
+        wasmJs {
+            binaries.executable()
+            browser() {
+                commonWebpackConfig {
+                    devServer = (devServer ?: KotlinWebpackConfig.DevServer()).apply {
+                        static = (static ?: mutableListOf()).apply {
+                            add(project.rootDir.path)
+                        }
                     }
                 }
             }
         }
     }
-    js {
-        browser {}
-        nodejs {}
-        binaries.executable()
+    if (includeWebTargets) {
+        js {
+            browser {}
+            nodejs {}
+            binaries.executable()
+        }
     }
     jvm()
     iosArm64()
