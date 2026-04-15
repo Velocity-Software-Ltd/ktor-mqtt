@@ -1,0 +1,5 @@
+jdk:
+  - openjdk21
+
+install:
+  - ./gradlew :mqtt-core:publishToMavenLocal :mqtt-client:publishToMavenLocal :mqtt-client-ws:publishToMavenLocal
